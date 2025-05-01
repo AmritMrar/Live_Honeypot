@@ -1,0 +1,102 @@
+/* Login Page Styles */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Transparent overlay */
+    padding: 20px;
+}
+
+.bodyimg {
+    background-image: url('/static/images/bodyimg.jpg');
+
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: auto;
+    width: 100%;
+    position: relative;
+}
+
+.login-card {
+    background: white;
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.login-card h2 {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.login-card p {
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1.1em;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.login-btn {
+    display: block;
+    width: 100%;
+    background-color: #FF5722;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-btn:hover {
+    background-color: #e64a19;
+}
+
+.login-links {
+    margin-top: 20px;
+}
+
+.login-links a {
+    display: block;
+    color: #007BFF;
+    text-decoration: none;
+    margin-bottom: 10px;
+    font-size: 1em;
+}
+
+.login-links a:hover {
+    text-decoration: underline;
+}
+
+.bodyimg {
+    background-image: url('bodyimg.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}

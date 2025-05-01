@@ -1,0 +1,101 @@
+/* Overall Style */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5dc; /* Cream background */
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+.log-box {
+    white-space: pre-wrap; /* important for logs to stay readable */
+}
+
+
+/* Updated Dashboard Header */
+.dashboard-header {
+    background-color:#d3c199; /* Blue background for a polished look */
+    color: #ffffff; /* White text for readability */
+    padding: -9px 28px; /* Increased padding for balance */
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    text-align: center; /* Center-align content */
+}
+
+.header-content {
+    position: relative; /* For positioning the accent line */
+    max-width: 600px; /* Keeps header text contained */
+    margin: 0 auto; /* Center the content horizontally */
+}
+
+.dashboard-header h1 {
+    font-size: 3em; /* Large, eye-catching font */
+    font-weight: bold; /* Strong and professional */
+    margin-bottom: 10px; /* Space between title and accent line */
+}
+
+.accent-line {
+    width: 60px; /* Short line under the title */
+    height: 4px; /* Thin but visible accent */
+    background-color: #ffffff; /* White matches the text color */
+    margin: 0 auto; /* Center the line */
+    border-radius: 2px; /* Subtle rounded edges for refinement */
+}
+
+/* Dashboard Layout */
+.dashboard-container {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 20px;
+    gap: 25px;
+    flex-wrap: wrap; /* Responsive for smaller screens */
+}
+
+/* Log Sections */
+.log-section {
+    width: 45%;
+    text-align: center;
+}
+
+/* Log Boxes */
+.log-box {
+    width: 100%;
+    height: 400px; /* Keep a consistent height */
+    border: 1px solid #ccc; /* Light, pencil-like border */
+    background-color: #ffffff;
+    border-radius: 5px;
+    padding: 15px;
+    overflow-y: auto; /* Enable scrolling for overflow content */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Professional light shadow */
+    margin-bottom: 15px; /* Space between box and buttons */
+}
+
+/* Button Container */
+.button-container {
+    display: flex;
+    justify-content: space-around; /* Center buttons evenly */
+    gap: 10px; /* Add space between buttons */
+}
+
+/* Buttons */
+.action-btn {
+    padding: 12px 25px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(90deg, #4caf50, #008CBA); /* Professional gradient */
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Button shadow */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px); /* Slight lift effect */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* Deeper shadow on hover */
+}
+
+.action-btn:active {
+    transform: translateY(0); /* Reset transform on click */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Original shadow on click */
+}

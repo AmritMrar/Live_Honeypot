@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+    <div class="dashboard-header">
+        <div class="header-content">
+            <h1>Hybrid Honeypot Dashboard</h1>
+            <div class="accent-line"></div>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Web Logs Section -->
+        <div class="log-section">
+            <h2>Web Logs</h2>
+            <pre class="log-box" id="web-logs">Loading web logs...</pre>
+            <div class="button-container">
+                <button class="action-btn" onclick="fetchLogs()">Refresh Web Logs</button>
+                <button class="action-btn" onclick="copyLogs('web-logs')">Copy Web Logs</button>
+            </div>
+        </div>
+
+        <!-- Port Logs Section -->
+        <div class="log-section">
+            <h2>Port Logs</h2>
+            <pre class="log-box" id="port-logs">Loading port logs...</pre>
+            <div class="button-container">
+                <button class="action-btn" onclick="fetchLogs()">Refresh Port Logs</button>
+                <button class="action-btn" onclick="copyLogs('port-logs')">Copy Port Logs</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function fetchLogs() {
+            fetch("/get_logs")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("web-logs").textContent = data.web_logs || "No web logs found.";
+                    document.getElementById("port-logs").textContent = data.port_logs || "No port logs found.";
+                })
+                .catch(error => {
+                    document.getElementById("web-logs").textContent = "Error loading web logs.";
+                    document.getElementById("port-logs").textContent = "Error loading port logs.";
+                    console.error("Error fetching logs:", error);
+                });
+        }
+
+        function copyLogs(id) {
+            const text = document.getElementById(id).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert(id.replace("-", " ") + " copied to clipboard!");
+            });
+        }
+
+        fetchLogs();
+    </script>
+</body>
+</html>

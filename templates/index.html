@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adventure Nest</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+</head>
+<body>
+    
+    <div class="bodyimg">
+        
+        <nav class="navbar">
+            <div class="navbar-left">
+                <img src="{{ url_for('static', filename='images/adventurelogo.png') }}" alt="Logo" class="logo">
+            </div>
+            
+            <div id="loading-message" style="display: none; text-align: center; font-size: 20px; margin-top: 20px;">
+                <i class="fas fa-spinner fa-spin"></i> Loading, please wait...
+            </div>
+            <div class="navbar-center">
+                <div class="search-container">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-bar" placeholder="Search for Bali">
+                </div>
+            </div>
+            
+            <div class="navbar-right">
+                <div class="currency-container">
+                    <img src="{{ url_for('static', filename='images/flag.png') }}" alt="INR Flag" class="flag-icon">
+                    <span>INR ₹</span>
+                </div>
+                <a href="/login" class="login-btn">Login</a>
+            </div>
+        </nav>
+        
+        <div class="container">
+            <!-- Large Image on the left -->
+            <div class="large-image">
+                <img src="{{ url_for('static', filename='images/big.png') }}" alt="Large Image">
+            </div>
+            
+            <!-- Right Side Grid Images -->
+            <div class="right-grid">
+                <div class="small-image">
+                    <img src="{{ url_for('static', filename='images/2nd.png') }}" alt="Destinations">
+                    <div class="overlay">Destinations</div>
+                </div>
+                
+                <div class="small-image">
+                    <img src="{{ url_for('static', filename='images/3rd.png') }}" alt="Properties">
+                    <div class="overlay">Properties</div>
+                </div>
+                
+                <div class="small-image">
+                    <img src="{{ url_for('static', filename='images/4th.png') }}" alt="Activity & Sightseeings">
+                    <div class="overlay">Activity & SightSeeings</div>
+                </div>
+                
+                <div class="small-image">
+                    <img src="{{ url_for('static', filename='images/5th.png') }}" alt="Bridge">
+                    <div class="overlay">View All Images</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container2">
+            <h1>Mesmerising Meghalaya | Group Tour Package</h1>
+            
+            <div class="container3">
+                <div class="trip-duration-bar">
+                    <div class="duration-box highlight">6D/5N</div>
+                    <div class="duration-box">
+                        <strong>1</strong> Day in <span>Shillong</span>
+                    </div>
+                    <div class="duration-box">
+                        <strong>2</strong> Days in <span>Cherrapunji</span>
+                    </div>
+                    <div class="duration-box">
+                        <strong>1</strong> Day in <span>Dawki</span>
+                    </div>
+                    <div class="duration-box">
+                        <strong>1</strong> Day in <span>Shillong</span>
+                    </div>
+                    <div class="duration-box">
+                        <strong>1</strong> Day in <span>Guwahati</span>
+                    </div>
+                </div>
+                
+                <div class="inclusions">
+                    <div class="icon-text">
+                        <span class="icon">🏨</span>
+                        <span>Stay Included</span>
+                    </div>
+                    <div class="icon-text">
+                        <span class="icon">🍽️</span>
+                        <span>Breakfast Included</span>
+                    </div>
+                    <div class="icon-text">
+                        <span class="icon">👀</span>
+                        <span>Sightseeing Included</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="trip-duration">
+                <h2>Choose Trip Duration</h2>
+                <div class="duration-cards">
+                    <div class="card">
+                        <img src="{{ url_for('static', filename='images/big.png') }}" alt="4 Days">
+                        <p>4 days</p>
+                        <p>Starting From ₹16,500</p>
+                    </div>
+                    <div class="card">
+                        <img src="{{ url_for('static', filename='images/5th.png') }}" alt="5 Days">
+                        <p>5 days</p>
+                        <p>Starting From ₹20,999</p>
+                    </div>
+                    <div class="card">
+                        <img src="{{ url_for('static', filename='images/4th.png') }}" alt="6 Days">
+                        <p>6 days</p>
+                        <p>Starting From ₹18,982</p>
+                    </div>
+                    <div class="card">
+                        <img src="{{ url_for('static', filename='images/2nd.png') }}" alt="7 Days">
+                        <p>7 days</p>
+                        <p>Starting From ₹24,985</p>
+                    </div>
+                    <div class="card">
+                        <img src="{{ url_for('static', filename='images/3rd.png') }}" alt="8 Days">
+                        <p>8 days</p>
+                        <p>Starting From ₹26,700</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="routes">
+                <h2>Destination Routes</h2>
+                <div class="route-info">
+                    <span>Shillong → Cherrapunji → Dawki → Shillong → Guwahati</span>
+                </div>
+            </div>
+            
+            <div class="stay-category">
+                <h2>Stay Category</h2>
+                <button class="stay-btn">Standard</button>
+                <button class="stay-btn">Deluxe</button>
+                <button class="stay-btn">Super Deluxe</button>
+                <button class="stay-btn">Luxury</button>
+            </div>
+            
+            <div class="highlights">
+                <h2>Trip Highlights</h2>
+                <ul>
+                    <li>* Experience the warmth of Meghalaya's hospitality as you explore vibrant landscapes and rich culture.</li>
+                    <li>* Marvel at the majestic Seven Sister Waterfalls, plunging gracefully down the lush hillsides.</li>
+                    <li>* Discover the charm of Mawlynnong, the 'Cleanest Village of Asia'.</li>
+                    <li>* Visit Elephant Falls, witness three cascading waterfalls amidst greenery and rocky terrain.</li>
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+        
+    <footer>
+        <div class="footer-content">
+            <a href="#" class="logo">
+                <img src="{{ url_for('static', filename='images/adventurelogo.png') }}" alt="Logo">
+            </a>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 AdventureNest.com All rights reserved.</p>
+            <p>
+                The content and images used on this site are copyright protected and copyrights vests with the respective owners. 
+                The usage of the content and images on this website is intended to promote the works and no endorsement of the artist 
+                shall be implied. Unauthorized use is prohibited and punishable by law.
+            </p>
+        </div>
+    </footer>
+    
+    <script>
+        document.querySelector('.search-bar').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent form from submitting
+                document.getElementById('loading-message').style.display = 'block'; // Show loading
+                setTimeout(function() {
+                    window.location.href = '/'; // Redirect to index
+                }, 4000); // 4 second delay
+            }
+        });
+    </script>
+    
+</body>
+</html>
+
+

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+    <style>
+        .password-wrapper {
+            position: relative;
+        }
+        .password-wrapper input {
+            padding-right: 13px;
+        }
+        .toggle-password {
+            position: absolute;
+            top: 69%;
+            right: -23px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body class="bodyimg">
+    <div class="login-container">
+        <div class="login-card">
+            <h2>Welcome Back!</h2>
+            <p>Please log in to continue.</p>
+            <form action="{{ url_for('login') }}" method="POST">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group password-wrapper">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <span class="toggle-password" onclick="togglePassword()">👁️</span>
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+            <div class="login-links">
+                <a href="/forgot-password">Forgot Password?</a>
+                <a href="/register">New User? Create an Account</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const pwd = document.getElementById("password");
+            pwd.type = pwd.type === "password" ? "text" : "password";
+        }
+    </script>
+</body>
+</html>
