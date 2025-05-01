@@ -1456,3 +1456,5 @@
 127.0.0.1 - - [01/May/2025 20:19:58] "[36mGET /static/dashboard.css HTTP/1.1[0m" 304 -
 127.0.0.1 - - [01/May/2025 20:19:58] "GET /get_logs HTTP/1.1" 200 -
 127.0.0.1 - - [01/May/2025 20:20:03] "GET /get_logs HTTP/1.1" 200 -
+ * Detected change in 'f:\\Projects\\WT\\live_Honeypotwt\\app.py', reloading
+ * Restarting with stat

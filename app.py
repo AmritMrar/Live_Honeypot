@@ -7,8 +7,8 @@ from datetime import datetime
 app = Flask(__name__)
 
 # Telegram Bot Credentials
-BOT_TOKEN = "7739240201:AAFjgJ2O984S1dmH1JScMYSlZICJwsmqWRs"
-CHAT_ID = "1312121239"
+BOT_TOKEN = os.getenv("BOT_TOKEN", "your_default_bot_token_here")
+CHAT_ID = os.getenv("CHAT_ID", "your_default_chat_id_here")
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
@@ -18,12 +18,12 @@ logging.getLogger().addHandler(web_log_handler)
 
 # Telegram Alert Function
 def send_telegram_alert(message):
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    payload = {"chat_id": CHAT_ID, "text": message}
     try:
+        url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+        payload = {"chat_id": CHAT_ID, "text": message}
         response = requests.post(url, data=payload)
-        print("Telegram status:", response.status_code, response.text)
-    except Exception as e:
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
         logging.error(f"Telegram Error: {e}")
 
 # Routes
@@ -67,5 +67,9 @@ def get_logs():
             port_logs = port_log.read()
     return jsonify({"web_logs": web_logs, "port_logs": port_logs})
 
+@app.route('/favicon.ico')
+def favicon():
+    return '', 200
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)), debug=True)
