@@ -18,16 +18,16 @@ BANNERS = {
     9001: "Welcome to Secure Portal v1.0\r\n",
 }
 
-# Log events to file and print to console
+# Ports to monitor
+PORTS_TO_WATCH = [22, 3306, 8081, 9001]
+
 def log_event(message):
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     log_line = f"[{timestamp}] {message}\n"
     with open(LOG_FILE, "a") as f:
         f.write(log_line)
-        f.flush()
     print("📝", log_line.strip())
 
-# Send Telegram alert
 def send_telegram_alert(message):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
     data = {"chat_id": CHAT_ID, "text": message}
@@ -42,13 +42,11 @@ def send_telegram_alert(message):
         print("❌ Telegram Exception:", e)
         log_event(f"Telegram Exception: {e}")
 
-# Handle incoming connection
 def handle_connection(port, client_socket, client_address):
     ip = client_address[0]
-    log_msg = f"Connection from {ip} on port {port}"
-    print("🔌", log_msg)
+    log_msg = f"Port Scan Detected: IP {ip} tried connecting to port {port}"
     log_event(log_msg)
-    send_telegram_alert(f"⚠️ Port Honeypot Alert!\nIP: {ip}\nPort: {port}")
+    send_telegram_alert(f"⚠️ Port Scan Detected\nIP: {ip}\nPort: {port}\nTime: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
     try:
         banner = BANNERS.get(port, "Unauthorized access detected.\r\n")
@@ -58,32 +56,42 @@ def handle_connection(port, client_socket, client_address):
 
     client_socket.close()
 
-# Start honeypot on a specific port
 def run_port_honeypot(port):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
     try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.settimeout(1.0)  # Helps in detecting rapid scans (non-blocking)
         sock.bind(("0.0.0.0", port))
         sock.listen(5)
-        print(f"🛡️ Port Honeypot listening on port {port}")
-        log_event(f"Listening on port {port}")
+        log_event(f"🛡️ Listening on port {port}")
     except Exception as e:
-        log_event(f"Failed to bind port {port}: {e}")
+        log_event(f"❌ Failed to bind port {port}: {e}")
         return
 
     while True:
-        client_socket, client_address = sock.accept()
-        thread = threading.Thread(target=handle_connection, args=(port, client_socket, client_address))
-        thread.start()
+        try:
+            client_socket, client_address = sock.accept()
+            thread = threading.Thread(target=handle_connection, args=(port, client_socket, client_address))
+            thread.start()
+        except socket.timeout:
+            continue
+        except Exception as e:
+            log_event(f"Socket error on port {port}: {e}")
 
-# Start honeypots on multiple ports
 def start_port_honeypots():
-    ports_to_watch = [22, 3306, 8081, 9001]
-    for port in ports_to_watch:
+    for port in PORTS_TO_WATCH:
         thread = threading.Thread(target=run_port_honeypot, args=(port,))
+        thread.daemon = True  # Allows clean exit
         thread.start()
 
-# Run the honeypot system
 if __name__ == "__main__":
+    log_event("🚀 Port-based Honeypot Started")
     start_port_honeypots()
+
+    # Keep the main thread alive
+    while True:
+        try:
+            pass
+        except KeyboardInterrupt:
+            log_event("🛑 Honeypot terminated by user")
+            break
