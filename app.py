@@ -67,6 +67,11 @@ def get_logs():
             port_logs = port_log.read()
     return jsonify({"web_logs": web_logs, "port_logs": port_logs})
 
+@app.route('/test-telegram')
+def test_telegram():
+    send_telegram_alert("🚨 Test alert from live honeypot!")
+    return "Test Telegram alert sent."
+
 @app.route('/favicon.ico')
 def favicon():
     return '', 200
