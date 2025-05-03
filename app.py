@@ -3,6 +3,7 @@ import os
 import logging
 import requests
 from datetime import datetime
+import pytz
 
 app = Flask(__name__)
 
@@ -10,11 +11,24 @@ app = Flask(__name__)
 BOT_TOKEN = os.getenv("BOT_TOKEN", "your_default_bot_token_here")
 CHAT_ID = os.getenv("CHAT_ID", "your_default_chat_id_here")
 
-# Setup logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
+# Setup logging with IST timezone
+class ISTFormatter(logging.Formatter):
+    def formatTime(self, record, datefmt=None):
+        ist = pytz.timezone('Asia/Kolkata')
+        dt = datetime.fromtimestamp(record.created, tz=ist)
+        return dt.strftime(datefmt or "%Y-%m-%d %H:%M:%S")
+
+formatter = ISTFormatter("[%(asctime)s] %(message)s")
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger()
+for handler in logger.handlers:
+    handler.setFormatter(formatter)
+
+# File log handler
 web_log_handler = logging.FileHandler('web_logs.txt')
 web_log_handler.setLevel(logging.INFO)
-logging.getLogger().addHandler(web_log_handler)
+web_log_handler.setFormatter(formatter)
+logger.addHandler(web_log_handler)
 
 # Telegram Alert Function
 def send_telegram_alert(message):
@@ -37,25 +51,25 @@ def login():
         email = request.form['email']
         password = request.form['password']
         suspicious_keywords = ['<script>', 'SELECT', 'DROP', '1=1', '--', '#', 'OR', 'AND', "' OR '1'='1'",
-    'INSERT', 'UPDATE', 'DELETE', 'MERGE', 'EXEC', 'UNION', 'ALTER', 'CREATE',
-    'TABLE', 'DATABASE', 'TRUNCATE', 'GRANT', 'REVOKE', 'VALUES', 'WHERE', 'HAVING',
-    'JOIN', 'ORDER BY', 'GROUP BY', 'LIMIT', 'OFFSET', "' OR 'x'='x'", "' AND '1'='1'",
-    "' AND 'x'='x'", ';', '/*', '*/', 'xp_cmdshell', 'sp_executesql',
-    'CAST(', 'CONVERT(', 'DECLARE', '@@version', '@@hostname',
-    'alert(', 'document.cookie', 'window.location', 'onmouseover=', 'onerror=',
-    'eval(', 'setTimeout(', 'setInterval(', 'console.log(', 'fetch(', 'XMLHttpRequest(',
-    'innerHTML=', 'outerHTML=', 'javascript:', 'iframe', 'src=', 'data:text/html;base64,',
-    '<img src=x onerror=alert(1)>', 'passwd', 'etc/passwd', '/etc/shadow', '.htaccess',
-    '/bin/bash', 'cmd.exe', 'powershell', '$(', '||', '|&', 'wget', 'curl',
-    'python -c', 'perl -e', 'ruby -e', 'php://input', 'file://', '../', '..\\',
-    '%00', '%0A', '%0D', '%3C', '%3E', 'sleep(', 'benchmark(', 'load_file(', 
-    'outfile', 'dumpfile', 'hex(', 'base64_decode(', 'base64_encode(', 'concat(', 'substr(']
+            'INSERT', 'UPDATE', 'DELETE', 'MERGE', 'EXEC', 'UNION', 'ALTER', 'CREATE',
+            'TABLE', 'DATABASE', 'TRUNCATE', 'GRANT', 'REVOKE', 'VALUES', 'WHERE', 'HAVING',
+            'JOIN', 'ORDER BY', 'GROUP BY', 'LIMIT', 'OFFSET', "' OR 'x'='x'", "' AND '1'='1'",
+            "' AND 'x'='x'", ';', '/*', '*/', 'xp_cmdshell', 'sp_executesql',
+            'CAST(', 'CONVERT(', 'DECLARE', '@@version', '@@hostname',
+            'alert(', 'document.cookie', 'window.location', 'onmouseover=', 'onerror=',
+            'eval(', 'setTimeout(', 'setInterval(', 'console.log(', 'fetch(', 'XMLHttpRequest(',
+            'innerHTML=', 'outerHTML=', 'javascript:', 'iframe', 'src=', 'data:text/html;base64,',
+            '<img src=x onerror=alert(1)>', 'passwd', 'etc/passwd', '/etc/shadow', '.htaccess',
+            '/bin/bash', 'cmd.exe', 'powershell', '$(', '||', '|&', 'wget', 'curl',
+            'python -c', 'perl -e', 'ruby -e', 'php://input', 'file://', '../', '..\\',
+            '%00', '%0A', '%0D', '%3C', '%3E', 'sleep(', 'benchmark(', 'load_file(', 
+            'outfile', 'dumpfile', 'hex(', 'base64_decode(', 'base64_encode(', 'concat(', 'substr(']
 
         if any(keyword.lower() in email.lower() or keyword.lower() in password.lower() for keyword in suspicious_keywords):
-            log_entry = f"[{datetime.now()}] Suspicious input detected - Email: {email}, Password: {password}\n"
+            log_entry = f"[{datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%Y-%m-%d %H:%M:%S')}] Suspicious input detected - Email: {email}, Password: {password}\n"
             with open("web_logs.txt", "a") as web_log:
                 web_log.write(log_entry)
-            alert_msg = f"⚠️ Web Honeypot Alert\nEmail: {email}\nPassword: {password}\nTime: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+            alert_msg = f"⚠️ Web Honeypot Alert\nEmail: {email}\nPassword: {password}\nTime: {datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%Y-%m-%d %H:%M:%S')}"
             send_telegram_alert(alert_msg)
 
         if email == 'test@example.com' and password == 'password123':
@@ -72,25 +86,25 @@ def dashboard():
 def search():
     query = request.form['query']
     suspicious_keywords = ['<script>', 'SELECT', 'DROP', '1=1', '--', '#', 'OR', 'AND', "' OR '1'='1'",
-    'INSERT', 'UPDATE', 'DELETE', 'MERGE', 'EXEC', 'UNION', 'ALTER', 'CREATE',
-    'TABLE', 'DATABASE', 'TRUNCATE', 'GRANT', 'REVOKE', 'VALUES', 'WHERE', 'HAVING',
-    'JOIN', 'ORDER BY', 'GROUP BY', 'LIMIT', 'OFFSET', "' OR 'x'='x'", "' AND '1'='1'",
-    "' AND 'x'='x'", ';', '/*', '*/', 'xp_cmdshell', 'sp_executesql',
-    'CAST(', 'CONVERT(', 'DECLARE', '@@version', '@@hostname',
-    'alert(', 'document.cookie', 'window.location', 'onmouseover=', 'onerror=',
-    'eval(', 'setTimeout(', 'setInterval(', 'console.log(', 'fetch(', 'XMLHttpRequest(',
-    'innerHTML=', 'outerHTML=', 'javascript:', 'iframe', 'src=', 'data:text/html;base64,',
-    '<img src=x onerror=alert(1)>', 'passwd', 'etc/passwd', '/etc/shadow', '.htaccess',
-    '/bin/bash', 'cmd.exe', 'powershell', '$(', '||', '|&', 'wget', 'curl',
-    'python -c', 'perl -e', 'ruby -e', 'php://input', 'file://', '../', '..\\',
-    '%00', '%0A', '%0D', '%3C', '%3E', 'sleep(', 'benchmark(', 'load_file(', 
-    'outfile', 'dumpfile', 'hex(', 'base64_decode(', 'base64_encode(', 'concat(', 'substr(']
+        'INSERT', 'UPDATE', 'DELETE', 'MERGE', 'EXEC', 'UNION', 'ALTER', 'CREATE',
+        'TABLE', 'DATABASE', 'TRUNCATE', 'GRANT', 'REVOKE', 'VALUES', 'WHERE', 'HAVING',
+        'JOIN', 'ORDER BY', 'GROUP BY', 'LIMIT', 'OFFSET', "' OR 'x'='x'", "' AND '1'='1'",
+        "' AND 'x'='x'", ';', '/*', '*/', 'xp_cmdshell', 'sp_executesql',
+        'CAST(', 'CONVERT(', 'DECLARE', '@@version', '@@hostname',
+        'alert(', 'document.cookie', 'window.location', 'onmouseover=', 'onerror=',
+        'eval(', 'setTimeout(', 'setInterval(', 'console.log(', 'fetch(', 'XMLHttpRequest(',
+        'innerHTML=', 'outerHTML=', 'javascript:', 'iframe', 'src=', 'data:text/html;base64,',
+        '<img src=x onerror=alert(1)>', 'passwd', 'etc/passwd', '/etc/shadow', '.htaccess',
+        '/bin/bash', 'cmd.exe', 'powershell', '$(', '||', '|&', 'wget', 'curl',
+        'python -c', 'perl -e', 'ruby -e', 'php://input', 'file://', '../', '..\\',
+        '%00', '%0A', '%0D', '%3C', '%3E', 'sleep(', 'benchmark(', 'load_file(', 
+        'outfile', 'dumpfile', 'hex(', 'base64_decode(', 'base64_encode(', 'concat(', 'substr(']
 
     if any(keyword.lower() in query.lower() for keyword in suspicious_keywords):
-        log_entry = f"[{datetime.now()}] Suspicious search input: {query}\n"
+        log_entry = f"[{datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%Y-%m-%d %H:%M:%S')}] Suspicious search input: {query}\n"
         with open("web_logs.txt", "a") as web_log:
             web_log.write(log_entry)
-        alert_msg = f"⚠️ Web Honeypot Alert\nSuspicious Search Input: {query}\nTime: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        alert_msg = f"⚠️ Web Honeypot Alert\nSuspicious Search Input: {query}\nTime: {datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%Y-%m-%d %H:%M:%S')}"
         send_telegram_alert(alert_msg)
 
     return redirect(url_for('index'))
