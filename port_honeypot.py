@@ -19,7 +19,7 @@ BANNERS = {
 }
 
 # Ports to monitor
-PORTS_TO_WATCH = [22, 3306, 8081, 9001]
+PORTS_TO_WATCH = [2222, 3306, 8081, 9001]
 
 def log_event(message):
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
