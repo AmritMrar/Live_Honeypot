@@ -7,12 +7,13 @@ import datetime
 BOT_TOKEN = "7739240201:AAFjgJ2O984S1dmH1JScMYSlZICJwsmqWRs"
 CHAT_ID = "1312121239"
 
-# Log file path
+# Log file paths
 LOG_FILE = "port_logs.txt"
+TELEGRAM_LOG_FILE = "telegram_alerts.txt"
 
 # Fake service banners
 BANNERS = {
-    22: "SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.3\r\n",
+    2222: "SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.3\r\n",
     3306: "5.7.26-log MySQL Community Server (GPL)\r\n",
     8081: "HTTP/1.1 200 OK\r\nServer: Apache\r\n\r\n",
     9001: "Welcome to Secure Portal v1.0\r\n",
@@ -28,6 +29,10 @@ def log_event(message):
         f.write(log_line)
     print("📝", log_line.strip())
 
+def log_telegram_alert(message):
+    with open(TELEGRAM_LOG_FILE, "a") as f:
+        f.write(message + "\n")
+
 def send_telegram_alert(message):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
     data = {"chat_id": CHAT_ID, "text": message}
@@ -35,6 +40,7 @@ def send_telegram_alert(message):
         response = requests.post(url, data=data)
         if response.ok:
             print("✅ Telegram alert sent.")
+            log_telegram_alert(message)
         else:
             print("❌ Telegram failed:", response.text)
             log_event(f"Telegram Error: {response.text}")
@@ -43,10 +49,16 @@ def send_telegram_alert(message):
         log_event(f"Telegram Exception: {e}")
 
 def handle_connection(port, client_socket, client_address):
-    ip = client_address[0]
-    log_msg = f"Port Scan Detected: IP {ip} tried connecting to port {port}"
+    ip, src_port = client_address
+    log_msg = f"[+] Connection from {ip}:{src_port} on port {port}"
     log_event(log_msg)
-    send_telegram_alert(f"⚠️ Port Scan Detected\nIP: {ip}\nPort: {port}\nTime: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+
+    try:
+        data = client_socket.recv(1024)
+        if data:
+            log_event(f"📥 Data received from {ip}:{port} - {data.decode(errors='ignore')}")
+    except:
+        pass
 
     try:
         banner = BANNERS.get(port, "Unauthorized access detected.\r\n")
@@ -54,13 +66,22 @@ def handle_connection(port, client_socket, client_address):
     except Exception as e:
         log_event(f"Error sending banner: {e}")
 
+    alert = (
+        f"⚠️ Port Scan Detected!\n"
+        f"🖥️ IP: {ip}\n"
+        f"🔌 Source Port: {src_port}\n"
+        f"🎯 Target Port: {port}\n"
+        f"🕒 Time: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+    )
+    send_telegram_alert(alert)
+
     client_socket.close()
 
 def run_port_honeypot(port):
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        sock.settimeout(1.0)  # Helps in detecting rapid scans (non-blocking)
+        sock.settimeout(1.0)  # Enables scan responsiveness
         sock.bind(("0.0.0.0", port))
         sock.listen(5)
         log_event(f"🛡️ Listening on port {port}")
@@ -81,7 +102,7 @@ def run_port_honeypot(port):
 def start_port_honeypots():
     for port in PORTS_TO_WATCH:
         thread = threading.Thread(target=run_port_honeypot, args=(port,))
-        thread.daemon = True  # Allows clean exit
+        thread.daemon = True
         thread.start()
 
 if __name__ == "__main__":
@@ -89,9 +110,8 @@ if __name__ == "__main__":
     start_port_honeypots()
 
     # Keep the main thread alive
-    while True:
-        try:
+    try:
+        while True:
             pass
-        except KeyboardInterrupt:
-            log_event("🛑 Honeypot terminated by user")
-            break
+    except KeyboardInterrupt:
+        log_event("🛑 Honeypot terminated by user")
