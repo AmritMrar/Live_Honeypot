@@ -36,7 +36,29 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        suspicious_keywords = ['<script>', 'SELECT', 'DROP', '1=1', '--', '#', 'OR', 'AND', "' OR '1'='1"]
+        suspicious_keywords = ['<script>', 'SELECT', 'DROP', '1=1', '--', '#', 'OR', 'AND', "' OR '1'='1"
+                               # SQL Injection Keywords
+    'SELECT', 'DROP', 'INSERT', 'UPDATE', 'DELETE', 'MERGE',
+    'EXEC', 'UNION', 'ALTER', 'CREATE', 'TABLE', 'DATABASE',
+    'TRUNCATE', 'GRANT', 'REVOKE', 'VALUES', 'WHERE', 'HAVING',
+    'JOIN', 'ORDER BY', 'GROUP BY', 'LIMIT', 'OFFSET',
+    "' OR '1'='1", "' OR 'x'='x", "' AND '1'='1", "' AND 'x'='x",
+    '--', '#', ';', '/*', '*/', 'xp_cmdshell', 'sp_executesql',
+    'CAST(', 'CONVERT(', 'DECLARE', '@@version', '@@hostname',
+
+    # JavaScript/XSS Keywords
+    '<script>', '</script>', 'alert(', 'document.cookie', 'window.location',
+    'onmouseover=', 'onerror=', 'onload=', 'eval(', 'setTimeout(', 'setInterval(',
+    'console.log(', 'fetch(', 'XMLHttpRequest(', 'innerHTML=', 'outerHTML=',
+    'javascript:', 'iframe', 'src=', 'data:text/html;base64,', '<img src=x onerror=alert(1)>',
+
+    # Other Potential Malicious Inputs
+    'passwd', 'etc/passwd', '/etc/shadow', '.htaccess', '/bin/bash',
+    'cmd.exe', 'powershell', '$(', '||', '|&', 'wget', 'curl',
+    'python -c', 'perl -e', 'ruby -e', 'php://input', 'file://',
+    '../', '..\\', '%00', '%0A', '%0D', '%3C', '%3E',
+    'sleep(', 'benchmark(', 'load_file(', 'outfile', 'dumpfile',
+    'hex(', 'base64_decode(', 'base64_encode(', 'concat(', 'substr(']
 
         if any(keyword.lower() in email.lower() or keyword.lower() in password.lower() for keyword in suspicious_keywords):
             log_entry = f"[{datetime.now()}] Suspicious input detected - Email: {email}, Password: {password}\n"
@@ -54,6 +76,42 @@ def login():
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')
+
+@app.route('/search', methods=['POST'])
+def search():
+    query = request.form['query']
+    suspicious_keywords = ['<script>', 'SELECT', 'DROP', '1=1', '--', '#', 'OR', 'AND', "' OR '1'='1"
+                           # SQL Injection Keywords
+    'SELECT', 'DROP', 'INSERT', 'UPDATE', 'DELETE', 'MERGE',
+    'EXEC', 'UNION', 'ALTER', 'CREATE', 'TABLE', 'DATABASE',
+    'TRUNCATE', 'GRANT', 'REVOKE', 'VALUES', 'WHERE', 'HAVING',
+    'JOIN', 'ORDER BY', 'GROUP BY', 'LIMIT', 'OFFSET',
+    "' OR '1'='1", "' OR 'x'='x", "' AND '1'='1", "' AND 'x'='x",
+    '--', '#', ';', '/*', '*/', 'xp_cmdshell', 'sp_executesql',
+    'CAST(', 'CONVERT(', 'DECLARE', '@@version', '@@hostname',
+
+    # JavaScript/XSS Keywords
+    '<script>', '</script>', 'alert(', 'document.cookie', 'window.location',
+    'onmouseover=', 'onerror=', 'onload=', 'eval(', 'setTimeout(', 'setInterval(',
+    'console.log(', 'fetch(', 'XMLHttpRequest(', 'innerHTML=', 'outerHTML=',
+    'javascript:', 'iframe', 'src=', 'data:text/html;base64,', '<img src=x onerror=alert(1)>',
+
+    # Other Potential Malicious Inputs
+    'passwd', 'etc/passwd', '/etc/shadow', '.htaccess', '/bin/bash',
+    'cmd.exe', 'powershell', '$(', '||', '|&', 'wget', 'curl',
+    'python -c', 'perl -e', 'ruby -e', 'php://input', 'file://',
+    '../', '..\\', '%00', '%0A', '%0D', '%3C', '%3E',
+    'sleep(', 'benchmark(', 'load_file(', 'outfile', 'dumpfile',
+    'hex(', 'base64_decode(', 'base64_encode(', 'concat(', 'substr(']
+
+    if any(keyword.lower() in query.lower() for keyword in suspicious_keywords):
+        log_entry = f"[{datetime.now()}] Suspicious search input: {query}\n"
+        with open("web_logs.txt", "a") as web_log:
+            web_log.write(log_entry)
+        alert_msg = f"⚠️ Web Honeypot Alert\nSuspicious Search Input: {query}\nTime: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        send_telegram_alert(alert_msg)
+
+    return redirect(url_for('index'))
 
 @app.route('/get_logs')
 def get_logs():

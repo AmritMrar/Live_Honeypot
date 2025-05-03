@@ -21,10 +21,11 @@
                 <i class="fas fa-spinner fa-spin"></i> Loading, please wait...
             </div>
             <div class="navbar-center">
-                <div class="search-container">
+                <form action="/search" method="POST" class="search-container">
                     <span class="search-icon">🔍</span>
-                    <input type="text" class="search-bar" placeholder="Search for Bali">
-                </div>
+                    <input type="text" class="search-bar" name="query" placeholder="Search for Bali">
+                </form>
+                
             </div>
             
             <div class="navbar-right">
@@ -190,7 +191,7 @@
     <script>
         document.querySelector('.search-bar').addEventListener('keydown', function(event) {
             if (event.key === 'Enter') {
-                event.preventDefault(); // Prevent form from submitting
+              //  event.preventDefault(); // Prevent form from submitting
                 document.getElementById('loading-message').style.display = 'block'; // Show loading
                 setTimeout(function() {
                     window.location.href = '/'; // Redirect to index
