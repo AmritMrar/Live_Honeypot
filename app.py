@@ -1,35 +1,20 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
 import os
 import logging
-import requests
+from flask import Flask, request, redirect, url_for, render_template
 from datetime import datetime
 import pytz
+import requests
 
 app = Flask(__name__)
 
-BOT_TOKEN = os.environ.get("BOT_TOKEN")
-CHAT_ID = os.environ.get("CHAT_ID")
+BOT_TOKEN = os.environ.get('BOT_TOKEN')
+CHAT_ID = os.environ.get('CHAT_ID')
 
-# Setup logging with IST timezone
-class ISTFormatter(logging.Formatter):
-    def formatTime(self, record, datefmt=None):
-        ist = pytz.timezone('Asia/Kolkata')
-        dt = datetime.fromtimestamp(record.created, tz=ist)
-        return dt.strftime(datefmt or "%Y-%m-%d %H:%M:%S")
+print(f"Bot Token: {BOT_TOKEN}")
+print(f"Chat ID: {CHAT_ID}")
 
-formatter = ISTFormatter("[%(asctime)s] %(message)s")
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger()
-for handler in logger.handlers:
-    handler.setFormatter(formatter)
+logging.basicConfig(filename='web_logs.txt', level=logging.INFO)
 
-# File log handler
-web_log_handler = logging.FileHandler('web_logs.txt')
-web_log_handler.setLevel(logging.INFO)
-web_log_handler.setFormatter(formatter)
-logger.addHandler(web_log_handler)
-
-# Telegram Alert Function
 def send_telegram_alert(message):
     try:
         url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
@@ -39,17 +24,12 @@ def send_telegram_alert(message):
     except requests.exceptions.RequestException as e:
         logging.error(f"Telegram Error: {e}")
 
-# Routes
-@app.route('/')
-def index():
-    return render_template('index.html')
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        suspicious_keywords = [...]  # (same long list as before — keep it as-is)
+        suspicious_keywords = ["admin", "root", "sql", "drop", "select", "delete", "insert", "passwd"]
 
         if any(keyword.lower() in email.lower() or keyword.lower() in password.lower() for keyword in suspicious_keywords):
             log_entry = f"[{datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%Y-%m-%d %H:%M:%S')}] Suspicious input detected - Email: {email}, Password: {password}\n"
@@ -64,67 +44,6 @@ def login():
             return "Invalid credentials, please try again."
     return render_template('login.html')
 
-@app.route('/search', methods=['POST'])
-def search():
-    query = request.form['query']
-    suspicious_keywords = [...]  # (same long list as before — keep it as-is)
-
-    if any(keyword.lower() in query.lower() for keyword in suspicious_keywords):
-        log_entry = f"[{datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%Y-%m-%d %H:%M:%S')}] Suspicious search input: {query}\n"
-        with open("web_logs.txt", "a") as web_log:
-            web_log.write(log_entry)
-        alert_msg = f"⚠️ Web Honeypot Alert\nSuspicious Search Input: {query}\nTime: {datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%Y-%m-%d %H:%M:%S')}"
-        send_telegram_alert(alert_msg)
-
-    return redirect(url_for('index'))
-
-@app.route('/dashboard')
-def dashboard():
-    return render_template('dashboard.html')
-
-@app.route('/get_logs')
-def get_logs():
-    web_logs = ""
-    port_logs = ""
-    if os.path.exists("web_logs.txt"):
-        with open("web_logs.txt", "r") as web_log:
-            web_logs = web_log.read()
-    if os.path.exists("port_logs.txt"):
-        with open("port_logs.txt", "r") as port_log:
-            port_logs = port_log.read()
-    return jsonify({"web_logs": web_logs, "port_logs": port_logs})
-
-@app.route('/api/logs', methods=['POST'])
-def receive_log():
-    data = request.get_json()
-    log_line = data.get("log", "")
-    if log_line:
-        with open("port_logs.txt", "a") as port_log:
-            port_log.write(log_line + "\n")
-        return jsonify({"status": "success"}), 200
-    return jsonify({"status": "no log received"}), 400
-
-@app.route('/test-telegram')
-def test_telegram():
-    send_telegram_alert("🚨 Test alert from live honeypot!")
-    return "Test Telegram alert sent."
-
-@app.route('/favicon.ico')
-def favicon():
-    return '', 200
-
-def send_telegram_alert(message):
-    try:
-        print(f"Sending alert: {message}")
-        url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-        payload = {"chat_id": CHAT_ID, "text": message}
-        response = requests.post(url, data=payload)
-        print(f"Telegram response: {response.status_code} {response.text}")
-        response.raise_for_status()
-    except requests.exceptions.RequestException as e:
-        logging.error(f"Telegram Error: {e}")
-
-if __name__ == '__main__':
-    print("Bot Token:", BOT_TOKEN)
-    print("Chat ID:", CHAT_ID)
-    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5050)), debug=False)
+@app.route('/')
+def index():
+    return "Honeypot Home Page"
