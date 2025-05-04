@@ -60,4 +60,4 @@ def dashboard():
 if __name__ == "__main__":
     print("Bot Token:", BOT_TOKEN)
     print("Chat ID:", CHAT_ID)
-    app.run(host="0.0.0.0", port=8080, debug=False)
+    app.run(host="0.0.0.0", port=5050, debug=False)
