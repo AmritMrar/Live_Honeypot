@@ -1458,3 +1458,49 @@
 127.0.0.1 - - [01/May/2025 20:20:03] "GET /get_logs HTTP/1.1" 200 -
  * Detected change in 'f:\\Projects\\WT\\live_Honeypotwt\\app.py', reloading
  * Restarting with stat
+[2025-05-04 07:00:28] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.197.52:5000
+[2025-05-04 07:00:31] [33mPress CTRL+C to quit[0m
+[2025-05-04 07:00:40] 192.168.197.52 - - [04/May/2025 07:00:40] "GET / HTTP/1.1" 200 -
+[2025-05-04 07:00:40] 192.168.197.52 - - [04/May/2025 07:00:40] "GET /static/styles.css HTTP/1.1" 200 -
+[2025-05-04 07:00:40] 192.168.197.52 - - [04/May/2025 07:00:40] "GET /static/images/flag.png HTTP/1.1" 200 -
+[2025-05-04 07:00:40] 192.168.197.52 - - [04/May/2025 07:00:40] "GET /static/images/adventurelogo.png HTTP/1.1" 200 -
+[2025-05-04 07:00:40] 192.168.197.52 - - [04/May/2025 07:00:40] "GET /static/images/4th.png HTTP/1.1" 200 -
+[2025-05-04 07:00:40] 192.168.197.52 - - [04/May/2025 07:00:40] "GET /static/images/5th.png HTTP/1.1" 200 -
+[2025-05-04 07:00:40] 192.168.197.52 - - [04/May/2025 07:00:40] "GET /static/images/3rd.png HTTP/1.1" 200 -
+[2025-05-04 07:00:40] 192.168.197.52 - - [04/May/2025 07:00:40] "GET /static/images/2nd.png HTTP/1.1" 200 -
+[2025-05-04 07:00:40] 192.168.197.52 - - [04/May/2025 07:00:40] "GET /static/images/big.png HTTP/1.1" 200 -
+[2025-05-04 07:00:40] 192.168.197.52 - - [04/May/2025 07:00:40] "GET /static/images/bodyimg.jpg HTTP/1.1" 200 -
+[2025-05-04 07:00:40] 192.168.197.52 - - [04/May/2025 07:00:40] "GET /favicon.ico HTTP/1.1" 200 -
+[2025-05-04 07:00:47] 192.168.197.52 - - [04/May/2025 07:00:47] "GET /login HTTP/1.1" 200 -
+[2025-05-04 07:00:47] 192.168.197.52 - - [04/May/2025 07:00:47] "GET /static/login.css HTTP/1.1" 200 -
+[2025-05-04 07:00:47] 192.168.197.52 - - [04/May/2025 07:00:47] "[33mGET /static/bodyimg.jpg HTTP/1.1[0m" 404 -
+[2025-05-04 07:00:47] 192.168.197.52 - - [04/May/2025 07:00:47] "GET /favicon.ico HTTP/1.1" 200 -
+[2025-05-04 07:01:38] Suspicious input detected - Email: malware@gmail.com, Password: <script>This is a test message</script>
+[2025-05-04 07:01:39] Telegram Error: 404 Client Error: Not Found for url: https://api.telegram.org/botyour_default_bot_token_here/sendMessage
+[2025-05-04 07:01:39] 192.168.197.52 - - [04/May/2025 07:01:39] "POST /login HTTP/1.1" 200 -
+[2025-05-04 07:01:39] 192.168.197.52 - - [04/May/2025 07:01:39] "GET /favicon.ico HTTP/1.1" 200 -
+[2025-05-04 07:02:13] 192.168.197.52 - - [04/May/2025 07:02:13] "[33mGET /dashboardf HTTP/1.1[0m" 404 -
+[2025-05-04 07:02:13] 192.168.197.52 - - [04/May/2025 07:02:13] "GET /favicon.ico HTTP/1.1" 200 -
+[2025-05-04 07:02:17] 192.168.197.52 - - [04/May/2025 07:02:17] "GET /dashboard HTTP/1.1" 200 -
+[2025-05-04 07:02:17] 192.168.197.52 - - [04/May/2025 07:02:17] "GET /static/dashboard.css HTTP/1.1" 200 -
+[2025-05-04 07:02:17] 192.168.197.52 - - [04/May/2025 07:02:17] "GET /get_logs HTTP/1.1" 200 -
+[2025-05-04 07:02:17] 192.168.197.52 - - [04/May/2025 07:02:17] "GET /favicon.ico HTTP/1.1" 200 -
+[2025-05-04 07:04:08] 192.168.197.52 - - [04/May/2025 07:04:08] "GET /get_logs HTTP/1.1" 200 -
+[2025-05-04 07:04:09] 192.168.197.52 - - [04/May/2025 07:04:09] "GET /get_logs HTTP/1.1" 200 -
+[2025-05-04 07:04:09] 192.168.197.52 - - [04/May/2025 07:04:09] "GET /get_logs HTTP/1.1" 200 -
+[2025-05-04 07:04:10] 192.168.197.52 - - [04/May/2025 07:04:10] "GET /get_logs HTTP/1.1" 200 -
+[2025-05-04 07:04:10] 192.168.197.52 - - [04/May/2025 07:04:10] "GET /get_logs HTTP/1.1" 200 -
+[2025-05-04 07:04:10] 192.168.197.52 - - [04/May/2025 07:04:10] "GET /get_logs HTTP/1.1" 200 -
+[2025-05-04 07:04:10] 192.168.197.52 - - [04/May/2025 07:04:10] "GET /get_logs HTTP/1.1" 200 -
+[2025-05-04 07:05:22] 192.168.197.52 - - [04/May/2025 07:05:22] "GET /get_logs HTTP/1.1" 200 -
+[2025-05-04 07:05:29] 192.168.197.52 - - [04/May/2025 07:05:29] "GET /login HTTP/1.1" 200 -
+[2025-05-04 07:05:29] 192.168.197.52 - - [04/May/2025 07:05:29] "GET /favicon.ico HTTP/1.1" 200 -
+[2025-05-04 07:05:31] 192.168.197.52 - - [04/May/2025 07:05:31] "GET /favicon.ico HTTP/1.1" 200 -
+[2025-05-04 07:57:36] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.197.52:5000
+[2025-05-04 07:57:37] [33mPress CTRL+C to quit[0m
