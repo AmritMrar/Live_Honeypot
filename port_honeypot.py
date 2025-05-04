@@ -14,11 +14,10 @@ LOG_FILE = "port_logs.txt"
 BANNERS = {
     3306: "5.7.26-log MySQL Community Server (GPL)\r\n",
     8081: "HTTP/1.1 200 OK\r\nServer: Apache\r\n\r\n",
-    9001: "Welcome to Secure Portal v1.0\r\n",
 }
 
 # Confirmed working ports
-PORTS_TO_WATCH = [3306, 8081, 9001]
+PORTS_TO_WATCH = [3306, 8081]
 
 def log_event(message):
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
