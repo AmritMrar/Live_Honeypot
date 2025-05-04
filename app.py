@@ -46,4 +46,18 @@ def login():
 
 @app.route('/')
 def index():
-    return "Honeypot Home Page"
+    return redirect(url_for('login'))
+
+@app.route('/dashboard')
+def dashboard():
+    try:
+        with open("web_logs.txt", "r") as f:
+            logs = f.readlines()
+    except FileNotFoundError:
+        logs = []
+    return render_template("dashboard.html", logs=logs)
+
+if __name__ == "__main__":
+    print("Bot Token:", BOT_TOKEN)
+    print("Chat ID:", CHAT_ID)
+    app.run(host="0.0.0.0", port=8080, debug=False)
