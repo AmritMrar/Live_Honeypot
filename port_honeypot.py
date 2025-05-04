@@ -2,6 +2,7 @@ import socket
 import threading
 import requests
 import datetime
+import time
 
 # Telegram Bot details
 BOT_TOKEN = "7739240201:AAFjgJ2O984S1dmH1JScMYSlZICJwsmqWRs"
@@ -16,7 +17,7 @@ BANNERS = {
     8081: "HTTP/1.1 200 OK\r\nServer: Apache\r\n\r\n",
 }
 
-# Active ports (9001 removed)
+# Active ports
 PORTS_TO_WATCH = [3306, 8081]
 
 def log_event(message):
@@ -44,7 +45,9 @@ def handle_connection(port, client_socket, client_address):
     ip = client_address[0]
     log_msg = f"Port Scan Detected: IP {ip} tried connecting to port {port}"
     log_event(log_msg)
-    send_telegram_alert(f"⚠️ Port Scan Detected\nIP: {ip}\nPort: {port}\nTime: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    send_telegram_alert(
+        f"⚠️ Port Scan Detected\nIP: {ip}\nPort: {port}\nTime: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+    )
 
     try:
         banner = BANNERS.get(port, "Unauthorized access detected.\r\n")
@@ -86,9 +89,8 @@ if __name__ == "__main__":
     log_event("🚀 Port-based Honeypot Started")
     start_port_honeypots()
 
-    while True:
-        try:
-            pass
-        except KeyboardInterrupt:
-            log_event("🛑 Honeypot terminated by user")
-            break
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        log_event("🛑 Honeypot terminated by user")
