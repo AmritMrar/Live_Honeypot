@@ -7,9 +7,8 @@ import pytz
 
 app = Flask(__name__)
 
-# ✅ Telegram Bot Credentials (hardcoded for now)
-BOT_TOKEN = '7739240201:AAFjgJ2O984S1dmH1JScMYSlZICJwsmqWRs'
-CHAT_ID = '1312121239'
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
+CHAT_ID = os.environ.get("CHAT_ID")
 
 # Setup logging with IST timezone
 class ISTFormatter(logging.Formatter):
