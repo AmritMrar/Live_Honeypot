@@ -16,7 +16,7 @@ BANNERS = {
     8081: "HTTP/1.1 200 OK\r\nServer: Apache\r\n\r\n",
 }
 
-# Confirmed working ports
+# Active ports (9001 removed)
 PORTS_TO_WATCH = [3306, 8081]
 
 def log_event(message):
@@ -86,8 +86,9 @@ if __name__ == "__main__":
     log_event("🚀 Port-based Honeypot Started")
     start_port_honeypots()
 
-    try:
-        # Keep the main thread alive to allow daemon threads to run
-        threading.Event().wait()
-    except KeyboardInterrupt:
-        log_event("🛑 Honeypot terminated by user")
+    while True:
+        try:
+            pass
+        except KeyboardInterrupt:
+            log_event("🛑 Honeypot terminated by user")
+            break
