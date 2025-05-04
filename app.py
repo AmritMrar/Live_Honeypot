@@ -113,6 +113,17 @@ def test_telegram():
 def favicon():
     return '', 200
 
+def send_telegram_alert(message):
+    try:
+        print(f"Sending alert: {message}")
+        url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+        payload = {"chat_id": CHAT_ID, "text": message}
+        response = requests.post(url, data=payload)
+        print(f"Telegram response: {response.status_code} {response.text}")
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Telegram Error: {e}")
+
 if __name__ == '__main__':
     print("Bot Token:", BOT_TOKEN)
     print("Chat ID:", CHAT_ID)
