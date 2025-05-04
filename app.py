@@ -78,10 +78,6 @@ def login():
             return "Invalid credentials, please try again."
     return render_template('login.html')
 
-@app.route('/dashboard')
-def dashboard():
-    return render_template('dashboard.html')
-
 @app.route('/search', methods=['POST'])
 def search():
     query = request.form['query']
@@ -109,6 +105,10 @@ def search():
 
     return redirect(url_for('index'))
 
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
+
 @app.route('/get_logs')
 def get_logs():
     web_logs = ""
@@ -120,6 +120,16 @@ def get_logs():
         with open("port_logs.txt", "r") as port_log:
             port_logs = port_log.read()
     return jsonify({"web_logs": web_logs, "port_logs": port_logs})
+
+@app.route('/api/logs', methods=['POST'])
+def receive_log():
+    data = request.get_json()
+    log_line = data.get("log", "")
+    if log_line:
+        with open("port_logs.txt", "a") as port_log:
+            port_log.write(log_line + "\n")
+        return jsonify({"status": "success"}), 200
+    return jsonify({"status": "no log received"}), 400
 
 @app.route('/test-telegram')
 def test_telegram():
