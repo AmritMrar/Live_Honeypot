@@ -1,17 +1,38 @@
+# alert.py
+
 import os
 import requests
+import logging
+from datetime import datetime
+import pytz
 
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-CHAT_ID = os.getenv("CHAT_ID")
+# Environment variables (fallbacks are hardcoded)
+BOT_TOKEN = os.getenv("BOT_TOKEN", "7739240201:AAFjgJ2O984S1dmH1JScMYSlZICJwsmqWRs")
+CHAT_ID = os.getenv("CHAT_ID", "1312121239")
 
-def send_telegram_alert(message):
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    payload = {
-        'chat_id': CHAT_ID,
-        'text': message
-    }
+# Setup logging
+class ISTFormatter(logging.Formatter):
+    def formatTime(self, record, datefmt=None):
+        ist = pytz.timezone('Asia/Kolkata')
+        dt = datetime.fromtimestamp(record.created, tz=ist)
+        return dt.strftime(datefmt or "%Y-%m-%d %H:%M:%S")
+
+formatter = ISTFormatter("[%(asctime)s] %(message)s")
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("alert")
+for handler in logger.handlers:
+    handler.setFormatter(formatter)
+
+def send_alert(message):
     try:
+        url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+        payload = {"chat_id": CHAT_ID, "text": message}
         response = requests.post(url, data=payload)
         response.raise_for_status()
+        logger.info("Telegram alert sent successfully.")
     except requests.exceptions.RequestException as e:
-        print(f"Failed to send alert: {e}")
+        logger.error(f"Telegram alert failed: {e}")
+
+# Example usage:
+if __name__ == "__main__":
+    send_alert("🚨 This is a test alert from alert.py.")
