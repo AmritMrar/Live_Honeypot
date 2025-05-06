@@ -1,13 +1,3 @@
-/* Login Page Styles */
-.login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5); /* Transparent overlay */
-    padding: 20px;
-}
-
 .bodyimg {
     background-image: url('/static/images/bodyimg.jpg');
 
@@ -18,6 +8,16 @@
     width: 100%;
     position: relative;
 }
+/* Login Page Styles */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Transparent overlay */
+    padding: 20px;
+}
+
 
 .login-card {
     background: white;
@@ -94,9 +94,4 @@
     text-decoration: underline;
 }
 
-.bodyimg {
-    background-image: url('bodyimg.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-}
+
