@@ -7,7 +7,7 @@ from alert import send_alert  # Import from alert.py
 
 app = Flask(__name__)
 
-# Setup logging with IST timezone
+# Logging with IST timezone
 class ISTFormatter(logging.Formatter):
     def formatTime(self, record, datefmt=None):
         ist = pytz.timezone('Asia/Kolkata')
@@ -20,7 +20,6 @@ logger = logging.getLogger()
 for handler in logger.handlers:
     handler.setFormatter(formatter)
 
-# File log handler
 web_log_handler = logging.FileHandler('web_logs.txt')
 web_log_handler.setLevel(logging.INFO)
 web_log_handler.setFormatter(formatter)
@@ -44,7 +43,6 @@ suspicious_keywords = [
     'outfile', 'dumpfile', 'hex(', 'base64_decode(', 'base64_encode(', 'concat(', 'substr('
 ]
 
-# Routes
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -64,7 +62,6 @@ def login():
 
         if email == 'test@example.com' and password == 'password123':
             return redirect(url_for('index'))
-
         return "Invalid credentials, please try again."
     return render_template('login.html')
 
