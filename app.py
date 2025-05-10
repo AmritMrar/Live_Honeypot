@@ -1,15 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 import os
 import logging
-import requests
 from datetime import datetime
 import pytz
+from alert import send_alert  # Import from alert.py
 
 app = Flask(__name__)
-
-# Telegram Bot Credentials
-BOT_TOKEN = os.getenv("BOT_TOKEN", "7739240201:AAFjgJ2O984S1dmH1JScMYSlZICJwsmqWRs")
-CHAT_ID = os.getenv("CHAT_ID", "1312121239")
 
 # Setup logging with IST timezone
 class ISTFormatter(logging.Formatter):
@@ -29,16 +25,6 @@ web_log_handler = logging.FileHandler('web_logs.txt')
 web_log_handler.setLevel(logging.INFO)
 web_log_handler.setFormatter(formatter)
 logger.addHandler(web_log_handler)
-
-# Telegram Alert Function
-def send_telegram_alert(message):
-    try:
-        url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-        payload = {"chat_id": CHAT_ID, "text": message}
-        response = requests.post(url, data=payload)
-        response.raise_for_status()
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Telegram Error: {e}")
 
 # Suspicious keyword list
 suspicious_keywords = [
@@ -68,24 +54,31 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
+        ip = request.remote_addr
+        timestamp = datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%Y-%m-%d %H:%M:%S')
+
         if any(kw.lower() in email.lower() or kw.lower() in password.lower() for kw in suspicious_keywords):
-            timestamp = datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%Y-%m-%d %H:%M:%S')
-            log_msg = f"[{timestamp}] Suspicious input - Email: {email}, Password: {password}"
+            log_msg = f"[{timestamp}] Suspicious input - IP: {ip}, Email: {email}, Password: {password}"
             logger.info(log_msg)
-            send_telegram_alert(f"⚠️ Web Honeypot Alert\nEmail: {email}\nPassword: {password}\nTime: {timestamp}")
+            send_alert(f"⚠️ Web Honeypot Alert\nIP: {ip}\nEmail: {email}\nPassword: {password}\nTime: {timestamp}")
+
         if email == 'test@example.com' and password == 'password123':
             return redirect(url_for('index'))
+
         return "Invalid credentials, please try again."
     return render_template('login.html')
 
 @app.route('/search', methods=['POST'])
 def search():
     query = request.form['query']
+    ip = request.remote_addr
+    timestamp = datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%Y-%m-%d %H:%M:%S')
+
     if any(kw.lower() in query.lower() for kw in suspicious_keywords):
-        timestamp = datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%Y-%m-%d %H:%M:%S')
-        log_msg = f"[{timestamp}] Suspicious search input: {query}"
+        log_msg = f"[{timestamp}] Suspicious search input - IP: {ip}, Query: {query}"
         logger.info(log_msg)
-        send_telegram_alert(f"⚠️ Web Honeypot Alert\nSuspicious Search Input: {query}\nTime: {timestamp}")
+        send_alert(f"⚠️ Web Honeypot Alert\nSuspicious Search Input: {query}\nIP: {ip}\nTime: {timestamp}")
+
     return redirect(url_for('index'))
 
 @app.route('/dashboard')
@@ -116,7 +109,7 @@ def receive_log():
 
 @app.route('/test-telegram')
 def test_telegram():
-    send_telegram_alert("🚨 Test alert from live honeypot!")
+    send_alert("🚨 Test alert from live honeypot!")
     return "Test Telegram alert sent."
 
 @app.route('/favicon.ico')

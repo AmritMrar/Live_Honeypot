@@ -6,11 +6,11 @@ import logging
 from datetime import datetime
 import pytz
 
-# Environment variables (fallbacks are hardcoded)
+# Environment variables (with defaults)
 BOT_TOKEN = os.getenv("BOT_TOKEN", "7739240201:AAFjgJ2O984S1dmH1JScMYSlZICJwsmqWRs")
 CHAT_ID = os.getenv("CHAT_ID", "1312121239")
 
-# Setup logging
+# Setup logging with IST
 class ISTFormatter(logging.Formatter):
     def formatTime(self, record, datefmt=None):
         ist = pytz.timezone('Asia/Kolkata')
@@ -29,10 +29,10 @@ def send_alert(message):
         payload = {"chat_id": CHAT_ID, "text": message}
         response = requests.post(url, data=payload)
         response.raise_for_status()
-        logger.info("Telegram alert sent successfully.")
+        logger.info("✅ Telegram alert sent.")
     except requests.exceptions.RequestException as e:
-        logger.error(f"Telegram alert failed: {e}")
+        logger.error(f"❌ Telegram alert failed: {e}")
 
-# Example usage:
+# Manual test
 if __name__ == "__main__":
     send_alert("🚨 This is a test alert from alert.py.")
