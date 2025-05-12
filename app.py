@@ -4,6 +4,9 @@ import logging
 from datetime import datetime
 import pytz
 from alert import send_alert  # Import from alert.py
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 
