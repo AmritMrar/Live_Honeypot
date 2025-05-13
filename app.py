@@ -4,6 +4,8 @@ import logging
 from datetime import datetime
 import pytz
 from alert import send_alert  # Import from alert.py
+from web_alert import send_web_alert
+
 from dotenv import load_dotenv
 
 load_dotenv()
