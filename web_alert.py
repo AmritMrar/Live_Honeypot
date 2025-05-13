@@ -11,8 +11,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Web Honeypot Telegram Credentials
-WEB_BOT_TOKEN = os.getenv("WEB_BOT_TOKEN", "7739240201:AAFjgJ2O984S1dmH1JScMYSlZICJwsmqWRs")
-WEB_CHAT_ID = os.getenv("WEB_CHAT_ID", "1312121239")
+WEB_BOT_TOKEN = os.getenv("WEB_BOT_TOKEN")
+WEB_CHAT_ID = os.getenv("WEB_CHAT_ID")
 
 if not WEB_BOT_TOKEN or not WEB_CHAT_ID:
     raise ValueError("❌ WEB_BOT_TOKEN and WEB_CHAT_ID must be set as environment variables.")
