@@ -1,24 +1,44 @@
+# web_alert.py
+
 import os
 import requests
-from dotenv import load_dotenv
+import logging
 from datetime import datetime
 import pytz
-import logging
+from dotenv import load_dotenv
 
-load_dotenv()  # Loads from .env when imported
+# Load .env variables
+load_dotenv()
 
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-CHAT_ID = os.getenv("CHAT_ID")
+# Web Honeypot Telegram Credentials
+WEB_BOT_TOKEN = os.getenv("WEB_BOT_TOKEN", "7739240201:AAFjgJ2O984S1dmH1JScMYSlZICJwsmqWRs")
+WEB_CHAT_ID = os.getenv("WEB_CHAT_ID", "1312121239")
 
-if not BOT_TOKEN or not CHAT_ID:
-    raise ValueError("❌ BOT_TOKEN and CHAT_ID must be set in environment or .env file.")
+if not WEB_BOT_TOKEN or not WEB_CHAT_ID:
+    raise ValueError("❌ WEB_BOT_TOKEN and WEB_CHAT_ID must be set as environment variables.")
+
+# Logging setup with IST timezone
+class ISTFormatter(logging.Formatter):
+    def formatTime(self, record, datefmt=None):
+        ist = pytz.timezone('Asia/Kolkata')
+        dt = datetime.fromtimestamp(record.created, tz=ist)
+        return dt.strftime(datefmt or "%Y-%m-%d %H:%M:%S")
+
+formatter = ISTFormatter("[%(asctime)s] %(message)s")
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("web_alert")
+for handler in logger.handlers:
+    handler.setFormatter(formatter)
 
 def send_web_alert(message):
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    payload = {"chat_id": CHAT_ID, "text": message}
+    url = f"https://api.telegram.org/bot{WEB_BOT_TOKEN}/sendMessage"
+    payload = {
+        "chat_id": WEB_CHAT_ID,
+        "text": message
+    }
     try:
         response = requests.post(url, data=payload)
         response.raise_for_status()
-        print("✅ Web Telegram alert sent.")
+        logger.info("✅ Web Telegram alert sent.")
     except requests.exceptions.RequestException as e:
-        print(f"Web Telegram Error: {e}")
+        logger.error(f"Telegram Error: {e}")

@@ -63,7 +63,7 @@ def login():
         if any(kw.lower() in email.lower() or kw.lower() in password.lower() for kw in suspicious_keywords):
             log_msg = f"[{timestamp}] Suspicious input - IP: {ip}, Email: {email}, Password: {password}"
             logger.info(log_msg)
-            send_alert(f"⚠️ Web Honeypot Alert\nIP: {ip}\nEmail: {email}\nPassword: {password}\nTime: {timestamp}")
+            send_web_alert(f"⚠️ Web Honeypot Alert\nIP: {ip}\nEmail: {email}\nPassword: {password}\nTime: {timestamp}")
 
         if email == 'test@example.com' and password == 'password123':
             return redirect(url_for('index'))
@@ -79,7 +79,7 @@ def search():
     if any(kw.lower() in query.lower() for kw in suspicious_keywords):
         log_msg = f"[{timestamp}] Suspicious search input - IP: {ip}, Query: {query}"
         logger.info(log_msg)
-        send_alert(f"⚠️ Web Honeypot Alert\nSuspicious Search Input: {query}\nIP: {ip}\nTime: {timestamp}")
+        send_web_alert(f"⚠️ Web Honeypot Alert\nSuspicious Search Input: {query}\nIP: {ip}\nTime: {timestamp}")
 
     return redirect(url_for('index'))
 
@@ -111,7 +111,7 @@ def receive_log():
 
 @app.route('/test-telegram')
 def test_telegram():
-    send_alert("🚨 Test alert from live honeypot!")
+    send_web_alert("🚨 Test alert from live honeypot!")
     return "Test Telegram alert sent."
 
 @app.route('/favicon.ico')
