@@ -6,7 +6,6 @@ import logging
 from datetime import datetime
 import pytz
 
-import pytz
 from dotenv import load_dotenv
 
 load_dotenv()  # ✅ This makes sure .env is loaded when run as script or imported

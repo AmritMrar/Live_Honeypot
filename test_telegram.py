@@ -1,7 +1,11 @@
 import requests
+import os
+from dotenv import load_dotenv
 
-BOT_TOKEN = "7739240201:AAFjgJ2O984S1dmH1JScMYSlZICJwsmqWRs"
-CHAT_ID = "1312121239"
+load_dotenv()  # ✅ This makes sure .env is loaded when run as script or imported
+
+BOT_TOKEN = os.getenv("BOT_TOKEN", "7739240201:AAFjgJ2O984S1dmH1JScMYSlZICJwsmqWRs")
+CHAT_ID = os.getenv("CHAT_ID", "1312121239")
 MESSAGE = "✅ Test message from Honeypot Bot"
 
 def send_telegram_message(token, chat_id, message):
