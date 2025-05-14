@@ -8,7 +8,7 @@ import pytz
 from dotenv import load_dotenv
 
 # Load .env variables
-load_dotenv()
+load_dotenv(dotenv_path=".env.web")
 
 # Web Honeypot Telegram Credentials
 WEB_BOT_TOKEN = os.getenv("WEB_BOT_TOKEN")
