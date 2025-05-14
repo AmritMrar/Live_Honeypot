@@ -30,6 +30,10 @@ logger = logging.getLogger("web_alert")
 for handler in logger.handlers:
     handler.setFormatter(formatter)
 
+logger.info(f"[DEBUG] Using TOKEN: {WEB_BOT_TOKEN}")
+logger.info(f"[DEBUG] Using CHAT_ID: {WEB_CHAT_ID}")
+
+
 def send_web_alert(message):
     url = f"https://api.telegram.org/bot{WEB_BOT_TOKEN}/sendMessage"
     payload = {
